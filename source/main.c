@@ -97,21 +97,32 @@ int main(int argc, char *argv[])
 
 	char *CMD_ADDR = (char*)ARGS_ADDR + sizeof(struct __argv);
 	size_t full_fPath_len = strlen(fPath)+1;
-	size_t full_nincfg_len = sizeof(NIN_CFG);
+	size_t full_nincfg_len = sizeof(NIN_CFG)+1;
 	size_t full_args_len = sizeof(struct __argv)+full_fPath_len+full_nincfg_len;
 
 	memset(ARGS_ADDR, 0, full_args_len);
 	ARGS_ADDR->argvMagic = ARGV_MAGIC;
 	ARGS_ADDR->commandLine = CMD_ADDR;
-	ARGS_ADDR->length = full_args_len;
+	ARGS_ADDR->length = full_fPath_len+full_nincfg_len;
 	ARGS_ADDR->argc = 2;
 
 	memcpy(CMD_ADDR, fPath, full_fPath_len);
-	memcpy(CMD_ADDR+full_fPath_len, &nincfg, full_nincfg_len);
+	memcpy(CMD_ADDR+full_fPath_len, &nincfg, sizeof(NIN_CFG));
+	CMD_ADDR[full_fPath_len+sizeof(NIN_CFG)] = 0;
 	DCFlushRange(ARGS_ADDR, full_args_len);
 #else
-	memset(ARGS_ADDR, 0, sizeof(struct __argv));
-	DCFlushRange(ARGS_ADDR, sizeof(struct __argv));
+	char *CMD_ADDR = (char*)ARGS_ADDR + sizeof(struct __argv);
+	size_t full_fPath_len = strlen(fPath)+1;
+	size_t full_args_len = sizeof(struct __argv)+full_fPath_len;
+
+	memset(ARGS_ADDR, 0, full_args_len);
+	ARGS_ADDR->argvMagic = ARGV_MAGIC;
+	ARGS_ADDR->commandLine = CMD_ADDR;
+	ARGS_ADDR->length = full_fPath_len;
+	ARGS_ADDR->argc = 1;
+
+	memcpy(CMD_ADDR, fPath, full_fPath_len);
+	DCFlushRange(ARGS_ADDR, full_args_len);
 #endif
 
 	//possibly affects nintendont speed?
