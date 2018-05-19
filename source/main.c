@@ -74,41 +74,43 @@ int main(int argc, char *argv[])
 	ICInvalidateRange(BOOTER_ADDR,app_booter_bin_size);
 
 #if FW_AUTOBOOT
-	f = fopen("sd:/nincfg.bin","rb");
-	if(!f)
-	{
-		printf("nincfg.bin not found!\n");
-		sleep(2);
-		return -2;
-	}
-	NIN_CFG nincfg;
-	fread(&nincfg,1,sizeof(NIN_CFG),f);
-	fclose(f);
-
-	memset(nincfg.GamePath,0,255);
-	memset(nincfg.CheatPath,0,255);
-	//this config can be modified with whatever settings you want for this game
-	//by default it enables autoboot and sets it to boot from sd (wii vc default)
-	nincfg.Config |= (NIN_CFG_AUTO_BOOT);
-	nincfg.Config &= ~(NIN_CFG_USB);
-	//for example this line would disable any widescreen bits set in the config
-	//nincfg.Config &= ~(NIN_CFG_USB|NIN_CFG_WIIU_WIDE|NIN_CFG_FORCE_WIDE);
-	strcpy(nincfg.GamePath,"di");
-
 	char *CMD_ADDR = (char*)ARGS_ADDR + sizeof(struct __argv);
+	size_t full_args_len;
 	size_t full_fPath_len = strlen(fPath)+1;
-	size_t full_nincfg_len = sizeof(NIN_CFG)+1;
-	size_t full_args_len = sizeof(struct __argv)+full_fPath_len+full_nincfg_len;
+	f = fopen("sd:/nincfg.bin","rb");
+	if(f)
+	{
+		NIN_CFG nincfg;
+		fread(&nincfg,1,sizeof(NIN_CFG),f);
+		fclose(f);
+		memset(nincfg.GamePath,0,255);
+		memset(nincfg.CheatPath,0,255);
+		//this config can be modified with whatever settings you want for this game
+		//by default it enables autoboot and sets it to boot from sd (wii vc default)
+		nincfg.Config |= (NIN_CFG_AUTO_BOOT);
+		nincfg.Config &= ~(NIN_CFG_USB);
+		//for example this line would disable any widescreen bits set in the config
+		//nincfg.Config &= ~(NIN_CFG_USB|NIN_CFG_WIIU_WIDE|NIN_CFG_FORCE_WIDE);
+		strcpy(nincfg.GamePath,"di");
+		size_t full_nincfg_len = sizeof(NIN_CFG)+1;
+		full_args_len = sizeof(struct __argv)+full_fPath_len+full_nincfg_len;
+		memset(ARGS_ADDR, 0, full_args_len);
+		ARGS_ADDR->length = full_fPath_len+full_nincfg_len;
+		ARGS_ADDR->argc = 2;
+		memcpy(CMD_ADDR+full_fPath_len, &nincfg, sizeof(NIN_CFG));
+		CMD_ADDR[full_fPath_len+sizeof(NIN_CFG)] = 0;
+	}
+	else
+	{
+		full_args_len = sizeof(struct __argv)+full_fPath_len;
+		memset(ARGS_ADDR, 0, full_args_len);
+		ARGS_ADDR->length = full_fPath_len;
+		ARGS_ADDR->argc = 1;
+	}
 
-	memset(ARGS_ADDR, 0, full_args_len);
 	ARGS_ADDR->argvMagic = ARGV_MAGIC;
 	ARGS_ADDR->commandLine = CMD_ADDR;
-	ARGS_ADDR->length = full_fPath_len+full_nincfg_len;
-	ARGS_ADDR->argc = 2;
-
 	memcpy(CMD_ADDR, fPath, full_fPath_len);
-	memcpy(CMD_ADDR+full_fPath_len, &nincfg, sizeof(NIN_CFG));
-	CMD_ADDR[full_fPath_len+sizeof(NIN_CFG)] = 0;
 	DCFlushRange(ARGS_ADDR, full_args_len);
 #else
 	char *CMD_ADDR = (char*)ARGS_ADDR + sizeof(struct __argv);
