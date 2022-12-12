@@ -6,12 +6,14 @@
  */
 #include <gccore.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <fat.h>
 #include <string.h>
 #include <unistd.h>
 #include <ogc/lwp_threads.h>
 #include <sdcard/wiisd_io.h>
 #include "CommonConfig.h"
+#include "app_booter_bin.h"
 
 //comment this out for non-autoboot version
 #define FW_AUTOBOOT 1
@@ -21,8 +23,8 @@ static u8 *BOOTER_ADDR = (u8*)0x92F00000;
 static void (*entry)() = (void*)0x92F00000;
 static struct __argv *ARGS_ADDR = (struct __argv*)0x93300800;
 
-extern u8 app_booter_bin[];
-extern u32 app_booter_bin_size;
+extern const uint8_t app_booter_bin[];
+extern const size_t app_booter_bin_size;
 
 int main(int argc, char *argv[]) 
 {
