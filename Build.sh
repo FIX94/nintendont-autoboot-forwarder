@@ -1,19 +1,16 @@
-@echo off
+#!/bin/sh
 
 make clean
 
 cd app_booter
-echo.
+echo ""
 echo Building App Booter
-echo.
+echo ""
 make
 mv app_booter.bin ../data
 
 cd ..
-echo.
+echo ""
 echo Building Loader
-echo.
+echo ""
 make
-
-echo.
-pause
