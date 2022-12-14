@@ -97,6 +97,12 @@ int main(int argc, char *argv[])
 	//nincfg.Config &= ~(NIN_CFG_USB|NIN_CFG_WIIU_WIDE|NIN_CFG_FORCE_WIDE);
 	strcpy(nincfg.GamePath,"di");
 
+	// Set the Version based on the NIN_CFG that this application
+	// writes to memory instead of accepting the Version set in nincfg.bin
+	// to avoid situations where a truncated struct is written to memory
+	// with a Version that is not really accurate given the missing fields.
+	nincfg.Version = NIN_CFG_VERSION;
+
 	char *CMD_ADDR = (char*)ARGS_ADDR + sizeof(struct __argv);
 	size_t full_fPath_len = strlen(fPath)+1;
 	size_t full_nincfg_len = sizeof(NIN_CFG)+1;
