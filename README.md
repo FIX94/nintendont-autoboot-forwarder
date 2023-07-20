@@ -40,6 +40,7 @@ sudo dkp-pacman -U devkitPPC-r35-1-linux.pkg.tar.xz
 ```
 sudo rm /opt/devkitpro/devkitPPC/bin/powerpc-eabi-gdb \
         /opt/devkitpro/devkitPPC/bin/powerpc-eabi-run \
+        /opt/devkitpro/devkitPPC/bin/powerpc-eabi-gdb-add-index \
         /opt/devkitpro/devkitPPC/include/gdb/jit-reader.h \
         /opt/devkitpro/devkitPPC/share/gdb/syscalls/amd64-linux.xml \
         /opt/devkitpro/devkitPPC/share/gdb/syscalls/gdb-syscalls.dtd \
@@ -50,7 +51,14 @@ sudo rm /opt/devkitpro/devkitPPC/bin/powerpc-eabi-gdb \
         /opt/devkitpro/devkitPPC/share/gdb/syscalls/ppc-linux.xml \
         /opt/devkitpro/devkitPPC/share/gdb/syscalls/ppc64-linux.xml \
         /opt/devkitpro/devkitPPC/share/gdb/syscalls/sparc-linux.xml \
-        /opt/devkitpro/devkitPPC/share/gdb/syscalls/sparc64-linux.xml
+        /opt/devkitpro/devkitPPC/share/gdb/syscalls/sparc64-linux.xml \
+        /opt/devkitpro/devkitPPC/share/gdb/syscalls/aarch64-linux.xml \
+        /opt/devkitpro/devkitPPC/share/gdb/syscalls/arm-linux.xml \
+        /opt/devkitpro/devkitPPC/share/gdb/syscalls/freebsd.xml \
+        /opt/devkitpro/devkitPPC/share/gdb/syscalls/s390-linux.xml \
+        /opt/devkitpro/devkitPPC/share/gdb/syscalls/s390x-linux.xml \
+        /opt/devkitpro/devkitPPC/share/gdb/system-gdbinit/elinos.py \
+        /opt/devkitpro/devkitPPC/share/gdb/system-gdbinit/wrs-linux.py
 ```
 
 ### Try again.
