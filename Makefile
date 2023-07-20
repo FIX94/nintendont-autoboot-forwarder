@@ -104,6 +104,7 @@ $(BUILD):
 clean:
 	@echo clean ...
 	@rm -fr $(BUILD) $(OUTPUT).elf $(OUTPUT).dol
+	@cd app_booter && $(MAKE) clean && cd ..
 
 
 #---------------------------------------------------------------------------------

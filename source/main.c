@@ -6,12 +6,14 @@
  */
 #include <gccore.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <fat.h>
 #include <string.h>
 #include <unistd.h>
 #include <ogc/lwp_threads.h>
 #include <sdcard/wiisd_io.h>
 #include "CommonConfig.h"
+#include "app_booter_bin.h"
 
 //comment this out for non-autoboot version
 #define FW_AUTOBOOT 1
@@ -21,8 +23,8 @@ static u8 *BOOTER_ADDR = (u8*)0x92F00000;
 static void (*entry)() = (void*)0x92F00000;
 static struct __argv *ARGS_ADDR = (struct __argv*)0x93300800;
 
-extern u8 app_booter_bin[];
-extern u32 app_booter_bin_size;
+extern const uint8_t app_booter_bin[];
+extern const size_t app_booter_bin_size;
 
 int main(int argc, char *argv[]) 
 {
@@ -94,6 +96,12 @@ int main(int argc, char *argv[])
 	//for example this line would disable any widescreen bits set in the config
 	//nincfg.Config &= ~(NIN_CFG_USB|NIN_CFG_WIIU_WIDE|NIN_CFG_FORCE_WIDE);
 	strcpy(nincfg.GamePath,"di");
+
+	// Set the Version based on the NIN_CFG that this application
+	// writes to memory instead of accepting the Version set in nincfg.bin
+	// to avoid situations where a truncated struct is written to memory
+	// with a Version that is not really accurate given the missing fields.
+	nincfg.Version = NIN_CFG_VERSION;
 
 	char *CMD_ADDR = (char*)ARGS_ADDR + sizeof(struct __argv);
 	size_t full_fPath_len = strlen(fPath)+1;

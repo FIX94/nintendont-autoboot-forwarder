@@ -5,7 +5,7 @@
 //#include "NintendontVersion.h"
 //#include "Metadata.h"
 
-#define NIN_CFG_VERSION		0x00000008
+#define NIN_CFG_VERSION		0x0000000A
 
 #define NIN_CFG_MAXPAD 4
 
@@ -23,12 +23,13 @@ typedef struct NIN_CFG
 	unsigned char		MemCardBlocks;
 	signed char			VideoScale;
 	signed char			VideoOffset;
-	unsigned char		Unused;
+	unsigned char		NetworkProfile;
+	unsigned int		WiiUGamepadSlot;
 } NIN_CFG;
 
 enum ninconfigbitpos
 {
-	NIN_CFG_BIT_CHEATS		= (0),
+	NIN_CFG_BIT_CHEATS	= (0),
 	NIN_CFG_BIT_DEBUGGER	= (1),	// Only for Wii Version
 	NIN_CFG_BIT_DEBUGWAIT	= (2),	// Only for Wii Version
 	NIN_CFG_BIT_MEMCARDEMU	= (3),
@@ -50,6 +51,10 @@ enum ninconfigbitpos
 	NIN_CFG_BIT_ARCADE_MODE = (16),
 	NIN_CFG_BIT_CC_RUMBLE	= (17),
 	NIN_CFG_BIT_SKIP_IPL	= (18),
+	NIN_CFG_BIT_BBA_EMU		= (19),
+
+	// Internal kernel settings.
+	NIN_CFG_BIT_MC_SLOTB	= (31),	// Slot B image is loaded
 };
 
 enum ninconfig
@@ -66,14 +71,18 @@ enum ninconfig
 	NIN_CFG_REMLIMIT	= (1<<NIN_CFG_BIT_REMLIMIT),
 	NIN_CFG_OSREPORT	= (1<<NIN_CFG_BIT_OSREPORT),
 	NIN_CFG_USB		= (1<<NIN_CFG_BIT_USB),
-	NIN_CFG_LED		= (1<<NIN_CFG_BIT_LED),
+	NIN_CFG_LED		= (1<<NIN_CFG_BIT_LED),		// Only for Wii Version
 	NIN_CFG_LOG		= (1<<NIN_CFG_BIT_LOG),
+
 	NIN_CFG_MC_MULTI	= (1<<NIN_CFG_BIT_MC_MULTI),
-	NIN_CFG_NATIVE_SI	= (1<<NIN_CFG_BIT_NATIVE_SI),
-	NIN_CFG_WIIU_WIDE	= (1<<NIN_CFG_BIT_WIIU_WIDE),
+	NIN_CFG_NATIVE_SI	= (1<<NIN_CFG_BIT_NATIVE_SI),	// Only for Wii Version
+	NIN_CFG_WIIU_WIDE	= (1<<NIN_CFG_BIT_WIIU_WIDE),	// Only for Wii U Version
 	NIN_CFG_ARCADE_MODE	= (1<<NIN_CFG_BIT_ARCADE_MODE),
 	NIN_CFG_CC_RUMBLE	= (1<<NIN_CFG_BIT_CC_RUMBLE),
 	NIN_CFG_SKIP_IPL	= (1<<NIN_CFG_BIT_SKIP_IPL),
+	NIN_CFG_BBA_EMU		= (1<<NIN_CFG_BIT_BBA_EMU),
+
+	NIN_CFG_MC_SLOTB	= (1<<NIN_CFG_BIT_MC_SLOTB),
 };
 
 enum ninextrasettings
